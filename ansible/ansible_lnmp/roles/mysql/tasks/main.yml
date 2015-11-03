@@ -1,0 +1,56 @@
+---
+# This playbook will install MariaDB and create db user and give permissions.
+
+- name: Install MySQL package
+  yum: name={{ item }} state=installed
+  with_items:
+   - mariadb-server
+   - MySQL-python
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: Install MariaDB package
+  yum: name={{ item }} state=installed
+  with_items:
+   - mariadb-server
+   - MySQL-python
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+#- name: Create Mysql configuration file
+#  template: src=my.cnf.j2 dest=/etc/my.cnf
+#  notify: 
+#  - restart mariadb
+#  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+#- name: Create Mysql configuration file
+#  template: src=my.cnf.j2 dest=/etc/my.cnf
+#  notify: 
+#  - restart mysqld
+#  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"  
+#  
+#- name: Create MariaDB log file
+#  file: path=/var/log/mysqld.log state=touch owner=mysql group=mysql mode=0775  
+#  file: path=/var/run/mysqld state=directory owner=mysql group=mysql mode=0775
+#  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Start MySQLd Service
+  service: name=mysqld state=started enabled=yes
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: Start MariaDB Service
+  service: name=mariadb state=started enabled=yes
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  
+- name: insert firewalld rule
+  firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Create Application Database
+  mysql_db: name={{ dbname }} state=present
+
+- name: Create Application DB User
+  mysql_user: name={{ dbuser }} password={{ upassword }} priv={{ dbname }}.*:ALL host='%' state=present
+
+- name: Import database
+  mysql_db: name={{ dbname }} state=import target=db_import.sql
+  ignore_errors: True
+

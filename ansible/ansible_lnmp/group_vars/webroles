@@ -1,0 +1,23 @@
+# This is used for the nginx server configration
+
+# Nginx virtual Host HostName
+server_hostname: www.example.com
+
+# Nginx listen port
+nginx_port: 80
+
+# nginx log directory
+log_dir: /data/logs/nginx
+
+# Web Content Directory
+document_root: /data/www
+
+# nginx owner user name
+user_name: www
+
+
+# Web Config Variables, Must be consistent with dbroles file
+mysql_port: 3306
+dbuser: shuhui
+dbname: daidaicn
+upassword: Abcd1234

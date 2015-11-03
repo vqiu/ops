@@ -1,0 +1,8 @@
+---
+- name: Copy a test page to documentroot
+  copy: src=phpinfo.php dest={{ document_root }}/index.php
+
+- name: Modify php session dir privileges
+  shell: chown -R {{ user_name }}.{{ user_name }} /var/lib/php/session
+  shell: chown -R {{ user_name }}.{{ user_name }} {{ document_root }}
+

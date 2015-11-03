@@ -1,0 +1,9 @@
+---
+# The variables file used by the playbooks in the dbroles group.
+
+
+mysqlservice: mysqld
+mysql_port: 3306
+dbuser: shuhui
+dbname: daidaicn
+upassword: Abcd1234

@@ -1,0 +1,25 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Disable selinux
+  shell: setenforce 0
+  shell: sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+  ignore_errors: True
+  when: ansible_os_family == "RedHat"
+
+- name: Optimize system kernel
+  script: kernel_optimize.sh
+  ignore_errors: True
+
+- name: Install libselinux-python
+  yum: name=libselinux-python state=present
+  
+  
+- name: Closed systems unnecessary services for RHEL-7
+  service: name={{ item }} state=stopped enabled=no
+  with_items:
+   - postfix.service
+   - rsyncd.service
+   - cups.service
+  ignore_errors: True
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"

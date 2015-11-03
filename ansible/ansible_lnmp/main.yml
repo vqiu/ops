@@ -1,0 +1,29 @@
+---
+# This playbook deploys the whole application stack in this site.  
+
+- name: Common deploy
+  hosts: all
+  remote_user: root
+  # remote_user: user
+  # sudo: yes
+
+  roles:
+    - common
+
+- name: Webroles deploy
+  hosts: webroles
+  remote_user: root
+  # remote_user: user
+  # sudo: yes
+
+  roles:
+    - nginx
+
+- name: Database roles deploy 
+  hosts: dbroles
+  remote_user: root
+  # remote_user: user
+  # sudo: yes
+
+  roles:
+    - mysql

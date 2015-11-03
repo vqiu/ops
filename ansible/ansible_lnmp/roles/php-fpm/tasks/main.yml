@@ -1,0 +1,22 @@
+---
+- name: Install php-fpm and deps
+  yum: name={{ item }} state=present
+  with_items:
+    - php
+    - php-fpm
+    - php-enchant
+    - php-mysql
+    - php-xml
+    - php-mbstring
+    - php-devel
+    - php-cli
+    - php-common
+    - php-gd
+
+- name: Modify default pool
+  command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
+  notify: restart php-fpm
+
+- name: Copy php-fpm configuration
+  template: src=www.conf dest=/etc/php-fpm.d/
+  notify: restart php-fpm

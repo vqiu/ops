@@ -1,0 +1,9 @@
+---
+- name: restart nginx
+  service: name=nginx state=restarted enabled=yes
+
+- name: restart firewalld
+  service: name=firewalld state=restarted enabled=yes
+
+- name: restart iptables
+  service: name=iptables state=restarted enabled=yes
