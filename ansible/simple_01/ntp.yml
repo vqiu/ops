@@ -1,0 +1,29 @@
+---
+# This is a simple example of ansible
+
+- hosts: all
+  remote_user: root
+
+  vars:
+    ntp_server_0: "0.pool.ntp.org"
+    ntp_server_1: "1.pool.ntp.org"
+    ntp_server_2: "2.pool.ntp.org"
+    ntp_server_3: "3.pool.ntp.org"
+
+  tasks:
+  - name: Install ntp package
+    yum: 
+      name=ntp
+      state=present
+  - name: Write the ntp config file
+    template: 
+      src=ntpd.j2
+      dest=/etc/ntp.conf
+    notify:
+    - restart ntpd
+  - name: ensure ntp is runnig
+    service:
+      name=ntpd state=started enabled=yes
+  handlers:
+    - name: restart htpd
+      service: name=ntpd state=restarted
