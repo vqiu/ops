@@ -13,8 +13,8 @@
     - name: write the salt-minion config file
       template: src=master.j2 dest=/etc/salt/minion
 
-    - file: name={{ base_root }} state=directory mode=0755
-    - file: name={{ pillar_root }} state=directory mode=0755
+    - file: path={{ base_root }} state=directory mode=0755
+    - file: path={{ pillar_root }} state=directory mode=0755
 
     - name: ensure that salt-master is started
       service: name=salt-master state=started
