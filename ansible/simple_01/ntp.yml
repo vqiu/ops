@@ -25,5 +25,5 @@
     service:
       name=ntpd state=started enabled=yes
   handlers:
-    - name: restart htpd
+    - name: restart ntpd
       service: name=ntpd state=restarted

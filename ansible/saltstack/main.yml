@@ -1,0 +1,28 @@
+---
+
+- hosts: master
+  remote_user: root
+
+  tasks:
+    - name: Install epel repostitory
+      yum: pkg=epel-release state=latest
+
+    - name: ensure salt-master is at the latest version
+      yum: pkg=salt-master state=latest  
+
+    - name: ensure that salt-master is started
+      service: name=salt-master state=started
+
+- hosts: minion
+  remote_user: root
+
+  tasks:
+    - name: Install epel repostitory
+      yum: pkg=epel-release state=latest
+
+    - name: ensure salt-minion is at the latest version
+      yum: pkg=salt-minion state=latest  
+      template: src=minion.j2 dest=/etc/minion
+
+    - name: ensure that salt-minion is started
+      service: name=salt-minion state=started
