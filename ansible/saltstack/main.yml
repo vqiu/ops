@@ -21,8 +21,10 @@
       yum: pkg=epel-release state=latest
 
     - name: ensure salt-minion is at the latest version
-      yum: pkg=salt-minion state=latest  
+      yum: pkg=salt-minion state=latest
+      
+    -name: write the salt-minion config file  
       template: src=minion.j2 dest=/etc/minion
-
+    
     - name: ensure that salt-minion is started
       service: name=salt-minion state=started
