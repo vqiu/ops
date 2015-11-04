@@ -1,5 +1,5 @@
-[master]
+[salt-master]
 192.168.198.41
 
-[minion]
+[salt-minion]
 192.168.198.75
