@@ -1,2 +1,6 @@
 # Define salt master IP address or DNS
 master_host: 192.168.198.41
+
+# Define salt directory
+base_root: /data/salt
+pillar_root: /data/pillar

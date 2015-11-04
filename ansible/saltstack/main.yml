@@ -1,6 +1,6 @@
 ---
 
-- hosts: master
+- hosts: salt-master
   remote_user: root
 
   tasks:
@@ -10,10 +10,16 @@
     - name: ensure salt-master is at the latest version
       yum: pkg=salt-master state=latest  
 
+    - name: write the salt-minion config file
+      template: src=master.j2 dest=/etc/salt/minion
+
+    - file: name={{ base_root }} state=directory mode=0755
+    - file: name={{ pillar_root }} state=directory mode=0755
+
     - name: ensure that salt-master is started
       service: name=salt-master state=started
 
-- hosts: minion
+- hosts: salt-minion
   remote_user: root
 
   tasks:
@@ -21,8 +27,10 @@
       yum: pkg=epel-release state=latest
 
     - name: ensure salt-minion is at the latest version
-      yum: pkg=salt-minion state=latest  
-      template: src=minion.j2 dest=/etc/minion
+      yum: pkg=salt-minion state=latest
+
+    - name: write the salt-minion config file
+      template: src=minion.j2 dest=/etc/salt/minion
 
     - name: ensure that salt-minion is started
       service: name=salt-minion state=started
