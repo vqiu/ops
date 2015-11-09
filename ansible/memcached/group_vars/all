@@ -1,0 +1,14 @@
+---
+# Variables listed here are applicable to memcached roles
+
+# Memcached listen port number
+memcached_port: 11211
+
+# Max clients
+max_connect: 1024
+
+# Memcached cache size [M]
+cache_size: 128
+
+# Enablished ethernet address
+memcached_listen_addr: 127.0.0.1

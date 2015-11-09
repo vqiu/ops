@@ -1,0 +1,10 @@
+---
+
+- hosts: memcachedserver
+  remote_user: root
+
+  tasks: 
+    - include: tasks/memcached.yml
+
+  handlers: 
+    - include: handlers/handlers.yml
