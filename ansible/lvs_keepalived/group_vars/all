@@ -1,0 +1,17 @@
+---
+# Variables listed here are applicable to all host groups
+
+# NTP 服务地址
+ntpserver_01: 1.cn.pool.ntp.org
+ntpserver_02: 0.asia.pool.ntp.org
+ntpserver_03: 1.asia.pool.ntp.org
+
+# 虚拟 IP 地址
+VIP_ADDR: 192.168.198.200
+
+# 虚拟路由 ID 值
+VIRTUAL_ROUTER_ID: 51
+
+# RealServer [后端IP]
+REAL_IP_1: 192.168.198.226
+REAL_IP_2: 192.168.198.227

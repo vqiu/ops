@@ -1,0 +1,12 @@
+---
+- name: Install net-tools
+  yum: name=net-tools state=present
+
+- name: Run the Script
+  template: src=ipvs.sh dest=/etc/init.d/ipvs mode=0755
+
+- name: service start
+  shell: sh /etc/init.d/ipvs start
+
+- name: ensure service start
+  service: name=ipvs state=started enabled=yes

@@ -1,0 +1,32 @@
+---
+# This playbook deploys the whole application stack in this site.  
+
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+
+  roles:
+    - common
+
+- name: apply keepalived_master configuration to master nodes
+  hosts: master
+  remote_user: root
+
+  roles:
+    - lvs
+    - keepalived_master
+
+- name: apply keepalived_slave configuration to slave nodes
+  hosts: slave
+  remote_user: root
+
+  roles:
+    - lvs
+    - keepalived_slave
+
+- name: apply realserver configuration to backend nodes
+  hosts: realserver
+  remote_user: root
+
+  roles:
+    - realserver

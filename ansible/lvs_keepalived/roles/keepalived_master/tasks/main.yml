@@ -1,0 +1,11 @@
+---
+- name: Install keepalived by shell
+  script: Install_Keepalived.sh
+  ignore_errors: True
+
+- name: write the keepalived config file
+  template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf mode=0755
+  notify: restart keepalived
+
+- name: ensure keepalived start
+  service: name=keepalived state=started enabled=yes

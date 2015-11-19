@@ -1,0 +1,11 @@
+# 路由ID
+ROUTER_ID: LVS_MASTER
+
+# 优先级别值,Master 要大于 Slave
+PRIORITY: 100
+
+# 网卡名称
+INT: eth0
+
+# 角色状态,Master 为MASTER,Slave 为 BAKCUP
+STATE: MASTER
