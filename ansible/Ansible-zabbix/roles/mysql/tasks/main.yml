@@ -1,0 +1,20 @@
+---
+- name: Install Mysql package
+  yum: name={{ item }} state=present
+  with_items:
+   - mysql-server
+   - MySQL-python
+
+- name: Create Mysql configuration file
+  template: src=my.cnf.j2 dest=/etc/my.cnf
+  notify: 
+  - restart mysql
+
+- name: Start Mysql Service
+  service: name=mysqld state=started enabled=yes
+
+- name: Create Zabbix database
+  mysql_db: name={{ db_name }} state=present
+
+- name: Create Zabbix database user
+  mysql_user: name={{ db_user }} password={{ db_password }} priv={{ db_name }}.*:ALL host='localhost' state=present

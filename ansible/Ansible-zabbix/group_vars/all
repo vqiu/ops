@@ -1,0 +1,18 @@
+---
+# Variables listed here are applicable to all host groups
+
+# NTP 服务地址
+ntpserver_01: 1.cn.pool.ntp.org
+ntpserver_02: 0.asia.pool.ntp.org
+ntpserver_03: 1.asia.pool.ntp.org
+
+# MySQL 变量
+mysql_port: 3306
+
+db_name: zabbix
+db_user: zabbix
+db_password: 123456
+db_socket: /var/lib/mysql/mysql.sock
+
+# Zabbix 服务器 IP
+Zabbix_Server_IP: 192.168.198.211

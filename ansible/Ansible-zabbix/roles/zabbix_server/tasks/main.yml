@@ -1,0 +1,51 @@
+---
+
+- name: copy rpm to zabbix-server
+  copy: src=zabbix-release-2.4-1.el6.noarch.rpm dest=/tmp/zabbix-release-2.4-1.el6.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'
+
+- name: Add Zabbix Yum repository for RHEL-6
+  command: rpm -ivh /tmp/zabbix-release-2.4-1.el6.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'
+  ignore_errors: True
+
+- name: copy rpm to zabbix-server
+  copy: src=zabbix-release-2.4-1.el7.noarch.rpm dest=/tmp/zabbix-release-2.4-1.el7.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
+- name: Add Zabbix Yum repository for RHEL-7
+  command: rpm -ivh /tmp/zabbix-release-2.4-1.el7.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+  ignore_errors: True
+
+- name: Install Zabbix-server Packages
+  yum: name={{ item }} state=latest
+  with_items:
+   - zabbix
+   - zabbix-get
+   - zabbix-server
+   - zabbix-web-mysql
+   - zabbix-web
+   - zabbix-agent
+
+- name: Import database
+  mysql_db: name={{ db_name }} state=import target=/usr/share/doc/zabbix-server-mysql-2.4.7/create/{{ item }}
+  with_items:
+   - schema.sql
+   - images.sql
+   - data.sql
+  ignore_errors: True
+
+- name: Configure zabbix file
+  template: src=zabbix_server.conf.j2 dest=/etc/zabbix/zabbix_server.conf
+  notify: restart zabbix-server
+
+- name: Modify timezone of PHP
+  command: sed -i 's/;date.timezone =/date.timezone = PRC/' /etc/php.ini
+  notify: restart httpd
+
+- name: ensure zabbix service start
+  service: name=zabbix-server state=started enabled=yes
+
+- name: ensure httpd service start
+  service: name=httpd state=started enabled=yes

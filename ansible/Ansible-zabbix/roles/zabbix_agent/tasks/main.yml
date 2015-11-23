@@ -1,0 +1,31 @@
+---
+
+- name: copy rpm to Zabbix-Agent
+  copy: src=zabbix-release-2.4-1.el6.noarch.rpm dest=/tmp/zabbix-release-2.4-1.el6.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'
+
+- name: Add Zabbix Yum repository for RHEL-6
+  command: rpm -ivh /tmp/zabbix-release-2.4-1.el6.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'
+  ignore_errors: True
+
+- name: copy rpm to Zabbix-Agent
+  copy: src=zabbix-release-2.4-1.el7.noarch.rpm dest=/tmp/zabbix-release-2.4-1.el7.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
+- name: Add Zabbix Yum repository for RHEL-7
+  command: rpm -ivh /tmp/zabbix-release-2.4-1.el7.noarch.rpm
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+  ignore_errors: True
+
+- name: Install Zabbix-Agent Packages
+  yum: name={{ item }} state=latest
+  with_items:
+   - zabbix-agent
+
+- name: Configure zabbix file
+  template: src=zabbix_agentd.conf.j2 dest=/etc/zabbix/zabbix_agentd.conf
+  notify: restart zabbix_agentd
+
+- name: ensure zabbix service start
+  service: name=zabbix-agent state=started enabled=yes

@@ -1,0 +1,30 @@
+---
+# This playbook deploys the whole application stack in this site.  
+
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+
+  roles:
+    - common
+
+- name: apply MySQL configuration to db nodes
+  hosts: zabbix_server
+  remote_user: root
+
+  roles:
+    - mysql
+
+- name: apply zabbix_server configuration to server nodes
+  hosts: zabbix_server
+  remote_user: root
+
+  roles:
+    - zabbix_server
+
+- name: apply zabbix_agent configuration to agent nodes
+  hosts: zabbix_agent
+  remote_user: root
+
+  roles:
+    - zabbix_agent
