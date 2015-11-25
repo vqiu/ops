@@ -1,4 +1,3 @@
-
 user  {{ nginx_owner }} {{ nginx_owner }};
 worker_processes  {{ ansible_processor_count }};
 
@@ -62,7 +61,7 @@ http {
     # Hidden Version
     server_tokens off;
 	
-#    upstream daidaicn {
+#    upstream backend {
 #        ip_hash;
 #        server 115.29.196.144 max_fails=3 fail_timeout=10s;
 #        server 115.29.207.111 max_fails=3 fail_timeout=10s;	

@@ -19,11 +19,10 @@ access_log_dir: /data/logs
 document_root: /data/www/{{ server_name }}
 
 # Nginx 运行用户
-nginx_owner: nginx
+nginx_owner: www
 
 # 启用加密 true,不启用加密 false, 启用加密时需要将证书放入 roles/nginx/files 目录(保持文件名为与server_name 一致)
-ssl_on: true
-#ssl_on: false
+ssl_on: false
 
 # 网站密钥存放路径
 ssl_dir: /etc/nginx/ssl/{{ server_name }}

@@ -3,7 +3,7 @@
 - name: Write the nginx config file and Create a virtual host file for {{ server_name}}
   template: src={{ item.src }} dest=/etc/nginx/{{item.dest}}.conf
   with_items:
-   - { src: 'nginx.conf.j2', dest: 'nginx.conf' } 
+   - { src: 'nginx.conf.j2', dest: 'nginx' } 
    - { src: 'template.conf.j2', dest: 'vhost/{{ server_name }}' } 
   notify: restart nginx
   when: not ssl_on

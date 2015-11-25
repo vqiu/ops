@@ -19,9 +19,16 @@
 - name: Install nginx
   yum: name=nginx state=latest enablerepo=nginx
 
+- name: Add user for nginx
+  user: name={{ nginx_owner }} shell=/sbin/nologin comment="nginx user" state=present
+  when: not("{{ nginx_owner }}" == "nginx")
+
 - name: Create directory for nginx
-  file: name={{ item }} state=directory owner={{ nginx_owner }} group={{ nginx_owner }} mode=0660
+  file: name={{ item }} state=directory owner={{ nginx_owner }} group={{ nginx_owner }} mode=0775
   with_items:
    - "{{ document_root }}"
    - "{{ access_log_dir }}"
    - "/etc/nginx/vhost"
+
+- name: Make sure nginx running
+  service: name=nginx state=started enabled=yes
