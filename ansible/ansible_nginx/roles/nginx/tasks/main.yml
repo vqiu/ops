@@ -1,0 +1,5 @@
+---
+
+  - include: nginx_install.yml
+  - include: http.yml
+  - include: https.yml

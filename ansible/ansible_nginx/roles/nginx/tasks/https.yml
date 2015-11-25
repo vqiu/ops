@@ -1,0 +1,25 @@
+---
+
+- name: Create directory for ssl
+  file: name={{ ssl_dir }} state=directory owner={{ nginx_owner }} group={{ nginx_owner }} mode=0444
+  when: ssl_on
+
+- name: Copy ssl files
+  copy: src={{ item.src }} dest={{ ssl_dir }}/{{server_name}}.{{ item.dest }}
+  with_items:
+   - { src: '{{ server_name}}.crt', dest: 'crt'}
+   - { src: '{{ server_name}}.key', dest: 'key'}
+  notify: restart nginx
+  when: ssl_on
+
+- name: Generate dhparam key
+  command: openssl dhparam -out {{ ssl_dir }}/dhparam.pem {{ dhparam_bit }}
+  when: ssl_on
+
+- name: Write the nginx config file and Create a virtual host file for {{ server_name}} [ssl]
+  template: src={{ item.src }} dest=/etc/nginx/{{item.dest}}
+  with_items:
+   - { src: 'nginx.conf.j2', dest: 'nginx.conf' } 
+   - { src: 'ssl.template.conf.j2', dest: 'vhost/{{ server_name }}.conf' } 
+  notify: restart nginx
+  when: ssl_on

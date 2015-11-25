@@ -1,0 +1,23 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Install ntp 
+  yum: name={{ item }} state=present
+  with_items:
+    - ntp
+    - libselinux-python
+
+- shell: getenforce
+  register: se_status
+  ignore_errors: True
+  
+- shell: setenforce 0
+  when: se_status == "enforcing"
+  
+- name: Configure ntp file
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  notify: restart ntp
+
+- name: Start the ntp service
+  service: name=ntpd state=started enabled=yes
+

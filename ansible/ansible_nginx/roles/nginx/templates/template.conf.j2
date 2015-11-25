@@ -1,0 +1,36 @@
+server {
+    listen 80 default_server;
+    server_name {{ server_name }};
+    root  {{ document_root }};
+    
+    location ~ .*\.php(\/.*)*$ {
+        fastcgi_pass 127.0.0.1:9000;
+        #fastcgi_pass unix:/tmp/php-cgi.sock;
+        fastcgi_index index.php;
+        fastcgi_param   SCRIPT_FILENAME
+                        $document_root$fastcgi_script_name;
+        include  fastcgi_params;
+    }
+
+	location / {
+		index index.html index.php;
+	}
+	
+	error_page 404 = http://{{ server_name }};
+
+	location ~ .*\.(gif|jpg|jpeg|png)$ {
+                expires      30d;
+    }
+
+	location ~ .*\.(js|css)?$ {
+                expires      12h;
+    }
+
+	location ~.*\.*(ico|icon) {
+		log_not_found off;
+		access_log off;
+	}
+
+    access_log  {{ access_log_dir }}/access_{{ server_name }}.log;
+    #access_log off;
+}
