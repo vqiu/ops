@@ -1,0 +1,49 @@
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+#anon_upload_enable=YES
+#anon_mkdir_write_enable=YES
+dirmessage_enable=YES
+xferlog_enable=YES
+#connect_from_port_20=YES
+#xferlog_file=/var/log/xferlog
+xferlog_std_format=YES
+idle_session_timeout=600
+#data_connection_timeout=120
+#nopriv_user=ftpsecure
+listen=YES
+listen_port= {{ listen_port }}
+listen_ipv6=NO
+
+pam_service_name=vsftpd.vu
+userlist_enable=YES
+tcp_wrappers=YES
+
+#开启虚拟用户
+guest_enable=YES
+
+#虚拟用户配置文件路径
+user_config_dir=/etc/vsftpd/vu_config
+
+#虚拟用户被映射用户
+guest_username={{ virtual_user }}
+
+userlist_enable=YES
+tcp_wrappers=YES
+
+# Passive mode
+pasv_enable=YES
+pasv_min_port=25000
+pasv_max_port=30000
+
+# VSFTPD-3 config
+#allow_writealbe_chroot=YES
+
+# SSL Configure
+#ssl_enable=YES
+#ssl_tlsv1=YES
+#force_local_logins_ssl=yes
+#force_local_data_ssl=yes
+## 使用openssl生成pem证书 openssl req -new -x509 -nodes -out vsftpd.pem -keyout vsftpd.pem -days 3650
+#rsa_cert_file=/etc/vsftpd/.sslkey/vsftpd.pem

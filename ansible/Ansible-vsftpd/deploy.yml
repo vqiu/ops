@@ -1,0 +1,65 @@
+---
+
+- hosts: all
+  remote_user: root
+  
+  vars:
+   - listen_port: 21
+   - virtual_user: ftpuser
+   - data_dir: /data/www/
+  
+  tasks:
+  - name: Install package
+    yum: name={{ item }} state=present
+    with_items:
+     - vsftpd   
+     - libselinux-python
+
+  - name: Turn off selinux
+    command: setenforce 0
+    ignore_errors: True
+
+  - name: Create username for virtual ftp
+    user: name={{ virtual_user }} state=present home={{ data_dir }}
+
+  - name: Install db_load tools for RHEL-6
+    yum: name=db4 state=present
+    when: ansible_distribution_major_version == "6" 
+
+  - name: Install db_load tools for RHEL-7
+    yum: name=libdb-utils state=present
+    when: ansible_distribution_major_version == "7" 
+
+  - name: copy the file of virtual users to FTP Server
+    copy: src=files/vu_list.txt dest=/etc/vsftpd/vu_list.txt mode=0755
+
+  - name: Genaren the db from vu_list.txt
+    command: db_load -T -t hash -f /etc/vsftpd/vu_list.txt /etc/vsftpd/vu_list.db
+    notify: restart vsftpd
+
+  - name: Write the vsftpd config file
+    template: src=files/vsftpd.conf.j2 dest=/etc/vsftpd/vsftpd.conf backup=yes
+    notify: restart vsftpd
+
+  - name: Write the pam files
+    template: src=files/pam_vsftpd.j2 dest=/etc/pam.d/vsftpd.vu backup=yes
+    notify: restart vsftpd
+
+  - name: Setting for RHEL-7
+    command: sed -i 's/#allow_writealbe_chroot=YES/allow_writealbe_chroot=YES/' /etc/vsftpd/vsftpd.conf
+    when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" 
+   
+  - name: Create the directory for virtual FTP
+    file: dest={{ item }} state=directory mode=0755
+    with_items:
+     - /etc/vsftpd/vu_config
+    
+  - name: copy virtual FTP file to config directory
+    template: src=files/vu_user_temp.j2 dest=/etc/vsftpd/vu_config/test
+
+  - name: ensure vsftpd service running
+    service: name=vsftpd state=started enabled=yes
+
+  handlers:
+   - name: restart vsftpd
+     service: name=vsftpd state=restarted
