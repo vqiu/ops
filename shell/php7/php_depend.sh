@@ -46,7 +46,7 @@ function user_create() {
 
 # 安装依赖包
 function yum_depend() {
-	for pkg in gcc gcc-c++ libXpm-devel curl-devel libxml2-devel glibc-devel glib2-devel bzip2 bzip2-devel ncurses-devel curl-devel e2fsprogs-devel krb5-devel libidn-devel libjpeg-devel libpng-devel wget
+	for pkg in gcc gcc-c++ libXpm-devel openssl-devel curl-devel libxml2-devel glibc-devel glib2-devel bzip2 bzip2-devel ncurses-devel curl-devel e2fsprogs-devel krb5-devel libidn-devel libjpeg-devel libpng-devel wget
 	do
 		yum -y install $pkg
 	done
