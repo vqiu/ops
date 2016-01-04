@@ -63,8 +63,6 @@ if [[ $? -eq 0 ]]; then
     # 建立配置文件
     \cp php.ini-production ${PREFIX}/php/etc/php.ini		
     
-    # \cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm		# 老版本启动方式[注释]
-    # chmod +x /etc/init.d/php-fpm                          # 老版本启动方式[注释]
     \cp ${PREFIX}/php/etc/php-fpm.conf.default ${PREFIX}/php/etc/php-fpm.conf
     \cp ${PREFIX}/php/etc/php-fpm.d/www.conf.default ${PREFIX}/php/etc/php-fpm.d/www.conf
     
