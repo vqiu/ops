@@ -20,6 +20,7 @@ OPCACHE_MEM_SIZE=128                               # Opcache 内存分配大小
 [[ -e php-${PHP_VER}.tar.bz2 ]] || wget -c https://down.vqiu.cn/package/tarball/php/php-${PHP_VER}.tar.bz2
 tar axvf php-${PHP_VER}.tar.bz2
 cd php-${PHP_VER}
+make clean
 ./configure \
 --prefix=${PREFIX}/php7 \
 --with-config-file-path=${PREFIX}/php7/etc \
