@@ -69,10 +69,7 @@ if [[ $? -eq 0 ]]; then
     \cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
     sed -i "s:\${prefix}:${PREFIX}/php:" /usr/lib/systemd/system/php-fpm.service
     sed -i "s:\${exec_prefix}:${PREFIX}/php:" /usr/lib/systemd/system/php-fpm.service
-    systemctl daemon-reload
-    systemctl start php-fpm.service
-    systemctl enable php-fpm.service
-    
+
      # 修改 php.ini 参数
      for i in ${PREFIX}/php/etc/php.ini
      do
@@ -92,4 +89,8 @@ if [[ $? -eq 0 ]]; then
      # 添加到系统环境变量
      echo "export PATH=\$PATH:${PREFIX}/php/bin">/etc/profile.d/php.sh
      source /etc/profile.d/php.sh
+     
+    systemctl daemon-reload
+    systemctl start php-fpm.service
+    systemctl enable php-fpm.service
 fi
