@@ -1,20 +1,29 @@
 #!/bin/bash
 # 文件名: php7-httpd.sh
 # 作者: shuhui
-# 版本: v1.1
+# 版本: v1.2
 
 ### 更新日志 ###
-# 2015-11-28 版本 v1.0: 以 7.0 为版本为基础，实现常用的 PHP 功能
-# 2016-01-04 版本 v1.1: 更新 PHP版本为7.0.1，增加编译并行数量
-
+# 2015-11-28 版本 v1.0: 1、以 7.0 为版本为基础，实现常用的 PHP 功能
+# 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量
+# 2016-01-05 版本 v1.2: 1、为 apxs 添加单独变量  2、增加 apxs 文件存在判断
 
 ### 变量定义区域 开始 ###
 
 PREFIX=/usr/local                                  # 安装路径
 PHP_VER=7.0.1                                      # PHP 版本号
 CPU_NUM=$(grep processor /proc/cpuinfo|wc -l)      # CPU 核心数量[编译并行数量]
+APXS2=/usr/local/apache24/bin/apxs                 # Apache apxs 程序路径[务必存在]
 
 ### 变量定义区域 结束 ###
+
+# 判断 apxs 文件是否存在
+function apxs_exist() {
+    if [ ! -f ${APXS2} ]; then
+        echo 'apxs not exists'
+        exit 1
+    fi
+}
 
 # 安装php-7
 function php7_install() {
@@ -23,7 +32,7 @@ function php7_install() {
 	cd php-${PHP_VER}
 	./configure \
 	--prefix=${PREFIX}/php7 \
-	--with-apxs2=/data/server/apache24/bin/apxs \
+	--with-apxs2=${APXS2} \
 	--with-config-file-path=${PREFIX}/php7/etc \
 	--enable-mysqlnd \
 	--enable-static \
@@ -54,10 +63,9 @@ function php7_install() {
 	--disable-fileinfo
 	[[ ${CPU_NUM} -gt 1 ]] && make -j${CPU_NUM} || make
 	make install
-	
 
-    if [[ $? -eq 0 ]]
-    then
+    if [[ $? -eq 0 ]]; then
+    
     	# 建立软链接
         ln -sv ${PREFIX}/php7 ${PREFIX}/php
         
@@ -82,4 +90,5 @@ function php7_install() {
     fi
 }
 
+apxs_exist
 php7_install
