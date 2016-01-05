@@ -1,5 +1,5 @@
 #!/bin/bash
-# 文件名: php7-cgi.sh
+# 文件名: php7-fpm.sh
 # 作者: shuhui
 # 版本: v1.1
 
