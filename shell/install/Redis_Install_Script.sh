@@ -8,7 +8,7 @@
 PKG_DIR='/usr/local/src'
 
 # Make Thread 
-cpu_threads=$(expr $(grep processor /proc/cpuinfo|wc -l) + 1)
+cpu_threads=$(grep processor /proc/cpuinfo|wc -l)
 
 
 if [ $(id -u) -ne 0 ];
