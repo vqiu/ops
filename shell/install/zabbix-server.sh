@@ -2,28 +2,24 @@
 # 文件名：zabbix-server-install.sh
 # 功能: zabbix server 自动安装脚本
 
-ROOT_UID=0						                    # root uid
+ROOT_UID=0                                                          # root uid
 E_NOTROOT=67					                    # 退出代码
-
-USER=zabbix						                    # zabbix 运行用户
-
-CPU_CORE=$(grep 'processor' /proc/cpuinfo|wc -l)	# CPU 核数
-
+USER=zabbix                                                         # zabbix 运行用户
+CPU_CORE=$(grep 'processor' /proc/cpuinfo|wc -l)                    # CPU 核数
 DB_TABLE=zabbix					                    # zabbix 数据库
 DB_USER=zabbix					                    # zabbix 数据库用户
-DB_PASS="WcbtERNTESC6FziKvqHG"			            # zabbix 数据库连接密码[不宜使用特殊符号]
-
-ZBX_SER_VER="3.0.0alpha5"
+DB_PASS="WcbtERNTESC6FziKvqHG"                                      # zabbix 数据库连接密码[不宜使用特殊符号]
+ZBX_SER_VER="3.0.0alpha6"                                           # zabbix 安装版本
 
 # 仅 root 用户下运行
-if [[ $UID != "0" ]]
+if [[ $UID != "$ROOT_UID" ]]
 then
     echo "Error: Please use root role to run me!"
     exit $E_NOTROOT
 fi
 
 # 创建 zabbix 用户
-id -u $USER>/dev/null
+id -u $USER >/dev/null 2>&1
 if [[ $? -ne 0 ]]
 then
 	groupadd -g 2000 $USER
@@ -48,8 +44,15 @@ sed -i 's/.*max_execution_time =.*/max_execution_time = 300/g' /etc/php.ini
 sed -i 's/.*max_input_time =.*/max_input_time = 300/g' /etc/php.ini
 chown ${USER}.${USER} /var/lib/php/session -R
 
+# 安装数据库
 yum -y install mariadb-server mariadb mariadb-devel php-mysql
-systemctl start mariadb
+
+# 指定数据库监听回环网卡
+sed -i "mysqld]/abind-address=127.0.0.1" /etc/my.cnf
+service mysqld start
+
+# 启动数据库
+systemctl restart mariadb
 systemctl enable mariadb
 
 # 创建数据库
@@ -74,12 +77,7 @@ cd zabbix-${ZBX_SER_VER}
 --with-libxml2 \
 --with-ssh2 \
 --with-openipmi
-if [[ $CPU_CORE -eq 1 ]]
-then
-    make;make install
-else	
-    make -j$CPU_CORE;make install
-fi
+[[ $CPU_CORE -eq 1 ]] && make;make install || make -j$CPU_CORE;make install
 
 # 复制配制文件
 mkdir -p /etc/zabbix
@@ -147,9 +145,5 @@ ExecStart=/usr/local/zabbix/sbin/zabbix_agentd -c $CONFFILE
 WantedBy=multi-user.target
 EOF
 
-systemctl enable httpd
-systemctl start httpd
-systemctl enable zabbix-server
-systemctl start zabbix-server
-systemctl enable zabbix-agent
-systemctl start zabbix-agent
+systemctl enable httpd zabbix-server zabbix-agent
+systemctl restart httpd zabbix-server zabbix-agent
