@@ -2,20 +2,20 @@
 # 文件名：zabbix-server-install.sh
 # 功能: zabbix server 自动安装脚本
 
-ROOT_UID=0                                                          # root uid
-E_NOTROOT=67					                    # 退出代码
+### 定义变量
+
 USER=zabbix                                                         # zabbix 运行用户
-CPU_CORE=$(grep 'processor' /proc/cpuinfo|wc -l)                    # CPU 核数
-DB_TABLE=zabbix					                    # zabbix 数据库
-DB_USER=zabbix					                    # zabbix 数据库用户
+CPU_CORE=$(grep -c 'processor' /proc/cpuinfo)                       # CPU 核数
+DB_TABLE=zabbix					                                    # zabbix 数据库
+DB_USER=zabbix					                                    # zabbix 数据库用户
 DB_PASS="WcbtERNTESC6FziKvqHG"                                      # zabbix 数据库连接密码[不宜使用特殊符号]
 ZBX_SER_VER="3.0.0alpha6"                                           # zabbix 安装版本
 
 # 仅 root 用户下运行
-if [[ $UID != "$ROOT_UID" ]]
+if [[ $UID != "0" ]]
 then
     echo "Error: Please use root role to run me!"
-    exit $E_NOTROOT
+    exit 67
 fi
 
 # 创建 zabbix 用户

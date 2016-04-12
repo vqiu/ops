@@ -1,7 +1,7 @@
 #!/bin/bash
-#FileName: git_install.sh
-#Description: Script for git
-#Author: shuhui
+# FileName: git_install.sh
+# Description: Script for git
+# Author: shuhui
 
 # Define Variables
 GLOBAL_NAME="admin"

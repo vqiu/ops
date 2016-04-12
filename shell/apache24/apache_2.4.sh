@@ -15,7 +15,7 @@ uid=2000                                           # OWNER 用户 UID
 gid=2000                                           # OWNER 用户 GID
 PREFIX=/usr/local                                  # 安装路径
 DOCUMENT_ROOT=/data/www                            # 网站存放目录
-CPU_NUM=$(grep processor /proc/cpuinfo|wc -l)      # 编译并行数量
+CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # 编译并行数量
 
 HTTPD_VER=2.4.17                                   # apache 版本
 APR_VER=1.5.2                                      # apr 版本
@@ -25,14 +25,13 @@ APRUTIL_VER=1.5.4                                  # apr-utils 版本
 
 
 # 判断当前用户是否为 root,否则退出
-if [ $(id -u) != "0" ]; then
+if [ ${UID} != "0" ]; then
 	echo "Error: Please use root role to install me!"
-	exit 1;
+	exit 67;
 
 fi
 
-# 创建用户
-# 创建 运行用户
+# 创建运行用户
 function user_create() {
 	id ${OWNER} >/dev/null 2>&1
 	if [[ $? -eq "1" ]];

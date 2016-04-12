@@ -3,7 +3,7 @@
 # 功能: zabbix Proxy 自动安装脚本
 
 USER=zabbix                                         # zabbix 运行用户
-CPU_CORE=$(grep 'processor' /proc/cpuinfo|wc -l)    # CPU 核数
+CPU_CORE=$(grep -c 'processor' /proc/cpuinfo)    # CPU 核数
 DB_HOST=localhost                                   # zabbix 数据库连接主机
 DB_TABLE=zabbix	                                    # zabbix 连接数据库
 DB_USER=zabbix	                                    # zabbix 数据库连接用户

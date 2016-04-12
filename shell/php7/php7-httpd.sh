@@ -1,12 +1,13 @@
 #!/bin/bash
 # 文件名: php7-httpd.sh
 # 作者: shuhui
-# 版本: v1.2
+# 版本: v1.3
 
 ### 更新日志 ###
 # 2015-11-28 版本 v1.0: 1、以 7.0 为版本为基础，实现常用的 PHP 功能
 # 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量
 # 2016-01-05 版本 v1.2: 1、为 apxs 添加单独变量  2、增加 apxs 文件存在判断
+# 2016-04-11 版本 v1.3: 1、更新 PHP版本为7.0.5  2、简化 $CPU_NUM 变量
 
 ### 变量定义区域 开始 ###
 
@@ -61,8 +62,7 @@ function php7_install() {
 	--with-openssl \
 	--enable-opcache \
 	--disable-fileinfo
-	[[ ${CPU_NUM} -gt 1 ]] && make -j${CPU_NUM} || make
-	make install
+	make -j${CPU_NUM} && make install
 
     if [[ $? -eq 0 ]]; then
     

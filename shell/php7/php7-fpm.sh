@@ -1,18 +1,19 @@
 #!/bin/bash
 # 文件名: php7-fpm.sh
 # 作者: shuhui
-# 版本: v1.1
+# 版本: v1.2
 
 ### 更新日志 ###
 # 2015-11-28 版本 v1.0: 1、以 7.0 为版本为基础，实现常用的 PHP-CGI 功能
 # 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量  3、添加 opcache 模块至 php.ini 文件 4、去除函数运行方式
+# 2016-04-11 版本 v1.2: 1、更新 PHP版本为7.0.5  2、简化 $CPU_NUM 变量
 
 
 ### 变量定义区域 开始 ###
 
 PREFIX=/usr/local                                  # 安装路径
-PHP_VER=7.0.1                                      # PHP 版本号
-CPU_NUM=$(grep processor /proc/cpuinfo|wc -l)      # CPU 核心数量[编译并行数量]
+PHP_VER=7.0.5                                      # PHP 版本号
+CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # CPU 核心数量[编译并行数量]
 OPCACHE_MEM_SIZE=128                               # Opcache 内存分配大小
 
 ### 变量定义区域 结束 ###
@@ -54,8 +55,7 @@ make clean
 --enable-opcache \
 --disable-fileinfo
 
-[[ ${CPU_NUM} -gt 1 ]] && make -j${CPU_NUM} || make
-make install
+make -j${CPU_NUM} && make install
 
 if [[ $? -eq 0 ]]; then
     # 建立软链接

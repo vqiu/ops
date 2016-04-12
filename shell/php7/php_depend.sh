@@ -14,7 +14,7 @@ PREFIX=/usr/local                                  # 安装根路径
 uid=2000                                           # OWNER 用户 UID
 gid=2000                                           # OWNER 用户 GID
 DOCUMENT_ROOT=/data/www                            # 网站存放目录
-CPU_NUM=$(grep processor /proc/cpuinfo|wc -l)      # 编译并行数量
+CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # 编译并行数量
 
 LIBICONV_VER=1.14                                  # iconv 版本
 ZLIB_VER=1.2.8                                     # zlib 版本
@@ -28,9 +28,9 @@ GD2_VER=2.1.1                                      # gd2 版本
 ### 变量定义区域 结束 ###
 
 # 判断当前用户是否为 root,否则退出
-if [ $(id -u) != "0" ]; then
+if [ ${UID} != "0" ]; then
 	echo "Error: Please use root role to install me!"
-	exit 1;
+	exit 67;
 
 fi
 

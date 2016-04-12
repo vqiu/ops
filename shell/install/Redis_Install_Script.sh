@@ -1,5 +1,5 @@
 #!/bin/sh
-#filename: redis.sh
+# Filename: redis.sh
 # Description: Install redis Script.
 # Author: shuhui.qiu
 
@@ -8,12 +8,13 @@
 PKG_DIR='/usr/local/src'
 
 # Make Thread 
-cpu_threads=$(grep processor /proc/cpuinfo|wc -l)
+cpu_threads=$(grep -c "processor" /proc/cpuinfo)
 
 
-if [ $(id -u) -ne 0 ];
+if [ ${UID} -ne 0 ];
 then
-	echo "ERROR,Please run as root user!";exit 1;
+	echo "ERROR,Please run as root user!"
+    exit 1;
 fi
 
 
