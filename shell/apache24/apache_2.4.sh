@@ -54,7 +54,7 @@ function pkg_depend() {
 function tarball_down() {
 	wget -c https://down.vqiu.cn/package/tarball/apache2/apr-${APR_VER}.tar.bz2
 	wget -c https://down.vqiu.cn/package/tarball/apache2/apr-util-${APRUTIL_VER}.tar.bz2
-	wget -c http://mirrors.sohu.com/apache/httpd-${HTTPD_VER}.tar.bz2
+	https://down.vqiu.cn/package/tarball/apache2/httpd-${HTTPD_VER}.tar.bz2
 }
 
 # 安装 apr 
