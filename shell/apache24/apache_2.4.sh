@@ -1,11 +1,12 @@
 #!/bin/bash
 # 文件名: apache_2.4.sh
 # 作者: shuhui
-# 版本: v1.0
+# 版本: v1.2
 
 ### 更新日志 ###
 # 2015-11-24 版本 v1.0: 1.以apache 2.4.17 版本实现简单的功能
 # 2016-01-04 版本 v1.1: 1.锁定 $OWNER 变量的 GID UID
+# 2016-04-12 版本 v1.2: 1.更新 Apache 版本为 2.4.20
 
 
 ### 变量定义区域 开始 ###
@@ -17,7 +18,7 @@ PREFIX=/usr/local                                  # 安装路径
 DOCUMENT_ROOT=/data/www                            # 网站存放目录
 CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # 编译并行数量
 
-HTTPD_VER=2.4.17                                   # apache 版本
+HTTPD_VER=2.4.20                                   # apache 版本
 APR_VER=1.5.2                                      # apr 版本
 APRUTIL_VER=1.5.4                                  # apr-utils 版本
 
@@ -53,7 +54,7 @@ function pkg_depend() {
 function tarball_down() {
 	wget -c https://down.vqiu.cn/package/tarball/apache2/apr-${APR_VER}.tar.bz2
 	wget -c https://down.vqiu.cn/package/tarball/apache2/apr-util-${APRUTIL_VER}.tar.bz2
-	wget -c https://down.vqiu.cn/package/tarball/apache2/httpd-${HTTPD_VER}.tar.bz2
+	wget -c http://mirrors.sohu.com/apache/httpd-${HTTPD_VER}.tar.bz2
 }
 
 # 安装 apr 
