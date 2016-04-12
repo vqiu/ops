@@ -22,6 +22,8 @@ HTTPD_VER=2.4.20                                   # apache 版本
 APR_VER=1.5.2                                      # apr 版本
 APRUTIL_VER=1.5.4                                  # apr-utils 版本
 
+MPM=event                                          # MPM 类型 [event|worker|prefork]
+
 ### 变量定义区域 结束 ###
 
 
@@ -95,7 +97,7 @@ function apache24_install() {
 	--with-apr-util=${PREFIX}/apr-util/ \
 	--with-zlib \
 	--with-mcrypt \
-	--with-mpm=prefork
+	--with-mpm=${MPM}
 	make -j ${CPU_NUM}
 	make install
 	cd ..
