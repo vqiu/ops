@@ -8,7 +8,7 @@
 # 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量
 # 2016-01-05 版本 v1.2: 1、为 apxs 添加单独变量  2、增加 apxs 文件存在判断
 # 2016-04-11 版本 v1.3: 1、更新 PHP版本为7.0.5  2、简化 $CPU_NUM 变量
-# 2016-05-03 版本 v1.4: 1、更新 PHP版本为7.0.6  2、新增编译选项  --with-gettext --enable-exif 及 --with-mysql
+# 2016-05-03 版本 v1.4: 1、更新 PHP版本为7.0.6  2、新增编译选项  --with-gettext --enable-exif
 
 ### 变量定义区域 开始 ###
 
@@ -36,9 +36,7 @@ function php7_install() {
 	--prefix=${PREFIX}/php-${PHP_VER} \
 	--with-apxs2=${APXS2} \
 	--with-config-file-path=${PREFIX}/php7/etc \
-	--with-mysql \
-	--with-mysqli \
-	--with-pdo-mysql \
+	--enable-mysqlnd \
 	--enable-static \
 	--enable-inline-optimization \
 	--enable-sockets \
