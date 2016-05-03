@@ -1,18 +1,19 @@
 #!/bin/bash
 # 文件名: php7-httpd.sh
 # 作者: shuhui
-# 版本: v1.3
+# 版本: v1.4
 
 ### 更新日志 ###
 # 2015-11-28 版本 v1.0: 1、以 7.0 为版本为基础，实现常用的 PHP 功能
 # 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量
 # 2016-01-05 版本 v1.2: 1、为 apxs 添加单独变量  2、增加 apxs 文件存在判断
 # 2016-04-11 版本 v1.3: 1、更新 PHP版本为7.0.5  2、简化 $CPU_NUM 变量
+# 2016-05-03 版本 v1.4: 1、更新 PHP版本为7.0.6  2、新增编译选项  --with-gettext --enable-exif 及 --with-mysql
 
 ### 变量定义区域 开始 ###
 
 PREFIX=/usr/local                                  # 安装路径
-PHP_VER=7.0.1                                      # PHP 版本号
+PHP_VER=7.0.6                                      # PHP 版本号
 CPU_NUM=$(grep -c processor /proc/cpuinfo)         # CPU 核心数量[编译并行数量]
 APXS2=/usr/local/apache24/bin/apxs                 # Apache apxs 程序路径[务必存在]
 
@@ -32,10 +33,12 @@ function php7_install() {
 	tar axvf php-${PHP_VER}.tar.bz2
 	cd php-${PHP_VER}
 	./configure \
-	--prefix=${PREFIX}/php7 \
+	--prefix=${PREFIX}/php-${PHP_VER} \
 	--with-apxs2=${APXS2} \
 	--with-config-file-path=${PREFIX}/php7/etc \
-	--enable-mysqlnd \
+	--with-mysql \
+	--with-mysqli \
+	--with-pdo-mysql \
 	--enable-static \
 	--enable-inline-optimization \
 	--enable-sockets \
@@ -61,13 +64,15 @@ function php7_install() {
 	--disable-debug \
 	--with-openssl \
 	--enable-opcache \
+	--with-gettext \
+	--enable-exif \
 	--disable-fileinfo
 	make -j${CPU_NUM} && make install
 
     if [[ $? -eq 0 ]]; then
     
     	# 建立软链接
-        ln -sv ${PREFIX}/php7 ${PREFIX}/php
+        ln -sv ${PREFIX}/php-${PHP_VER} ${PREFIX}/php
         
         # 建立配置文件
         \cp php.ini-production ${PREFIX}/php/etc/php.ini
