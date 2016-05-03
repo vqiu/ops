@@ -1,18 +1,19 @@
 #!/bin/bash
 # 文件名: php7-fpm.sh
 # 作者: shuhui
-# 版本: v1.2
+# 版本: v1.3
 
 ### 更新日志 ###
 # 2015-11-28 版本 v1.0: 1、以 7.0 为版本为基础，实现常用的 PHP-CGI 功能
 # 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量  3、添加 opcache 模块至 php.ini 文件 4、去除函数运行方式
 # 2016-04-11 版本 v1.2: 1、更新 PHP版本为7.0.5  2、简化 $CPU_NUM 变量
+# 2016-05-03 版本 v1.3: 1、更新 PHP版本为7.0.6  2、新增编译选项  --with-gettext --enable-exif 及 --with-mysql
 
 
 ### 变量定义区域 开始 ###
 
 PREFIX=/usr/local                                  # 安装路径
-PHP_VER=7.0.5                                      # PHP 版本号
+PHP_VER=7.0.6                                      # PHP 版本号
 CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # CPU 核心数量[编译并行数量]
 OPCACHE_MEM_SIZE=128                               # Opcache 内存分配大小
 
@@ -23,9 +24,11 @@ tar axvf php-${PHP_VER}.tar.bz2
 cd php-${PHP_VER}
 make clean
 ./configure \
---prefix=${PREFIX}/php7 \
+--prefix=${PREFIX}/php-${PHP_VER} \
 --with-config-file-path=${PREFIX}/php7/etc \
---enable-mysqlnd \
+--with-mysql \
+--with-mysqli \
+--with-pdo-mysql \
 --enable-fpm \
 --enable-static \
 --enable-inline-optimization \
@@ -53,13 +56,15 @@ make clean
 --with-openssl \
 --disable-maintainer-zts \
 --enable-opcache \
+--with-gettext \
+--enable-exif \
 --disable-fileinfo
 
 make -j${CPU_NUM} && make install
 
 if [[ $? -eq 0 ]]; then
     # 建立软链接
-    ln -sv ${PREFIX}/php7 ${PREFIX}/php
+    ln -sv ${PREFIX}/php-${PHP_VER} ${PREFIX}/php
     
     # 建立配置文件
     \cp php.ini-production ${PREFIX}/php/etc/php.ini		
