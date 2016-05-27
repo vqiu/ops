@@ -8,18 +8,19 @@
 # 2016-01-04 版本 v1.1: 1、更新 PHP版本为7.0.1  2、增加编译并行数量  3、添加 opcache 模块至 php.ini 文件 4、去除函数运行方式
 # 2016-04-11 版本 v1.2: 1、更新 PHP版本为7.0.5  2、简化 $CPU_NUM 变量
 # 2016-05-03 版本 v1.3: 1、更新 PHP版本为7.0.6  2、新增编译选项  --with-gettext --enable-exif 及 --with-mysql
+# 2016-05-27 版本 v1.4: 1、更新 PHP版本为7.0.7
 
 
 ### 变量定义区域 开始 ###
 
 PREFIX=/usr/local                                  # 安装路径
-PHP_VER=7.0.6                                      # PHP 版本号
+PHP_VER=7.0.7                                      # PHP 版本号
 CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # CPU 核心数量[编译并行数量]
 OPCACHE_MEM_SIZE=128                               # Opcache 内存分配大小
 
 ### 变量定义区域 结束 ###
 
-[[ -e php-${PHP_VER}.tar.bz2 ]] || wget -c https://down.vqiu.cn/package/tarball/php/php-${PHP_VER}.tar.bz2
+[[ -e php-${PHP_VER}.tar.bz2 ]] || wget -c http://mirrors.sohu.com/php/php-${PHP_VER}.tar.bz2
 tar axvf php-${PHP_VER}.tar.bz2
 cd php-${PHP_VER}
 make clean
