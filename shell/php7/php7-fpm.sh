@@ -27,7 +27,9 @@ make clean
 ./configure \
 --prefix=${PREFIX}/php-${PHP_VER} \
 --with-config-file-path=${PREFIX}/php7/etc \
---enable-mysqlnd \
+--with-mysql \
+--with-mysqli \
+--with-pdo-mysql \
 --enable-fpm \
 --enable-static \
 --enable-inline-optimization \
