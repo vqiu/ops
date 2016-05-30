@@ -36,7 +36,9 @@ function php7_install() {
 	--prefix=${PREFIX}/php-${PHP_VER} \
 	--with-apxs2=${APXS2} \
 	--with-config-file-path=${PREFIX}/php7/etc \
-	--enable-mysqlnd \
+	--with-mysql \
+	--with-mysqli \
+	--with-pdo-mysql \
 	--enable-static \
 	--enable-inline-optimization \
 	--enable-sockets \
