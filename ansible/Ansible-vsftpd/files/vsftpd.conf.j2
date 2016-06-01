@@ -47,3 +47,6 @@ pasv_max_port=30000
 #force_local_data_ssl=yes
 ## 使用openssl生成pem证书 openssl req -new -x509 -nodes -out vsftpd.pem -keyout vsftpd.pem -days 3650
 #rsa_cert_file=/etc/vsftpd/.sslkey/vsftpd.pem
+
+# 解决Filezilla 报Handshake failed (40) 错误问题
+#ssl_ciphers=HIGH
