@@ -6,7 +6,7 @@
   vars:
    - listen_port: 21
    - virtual_user: ftpuser
-   - data_dir: /data/www/
+   - data_dir: /data/vsftpd/
   
   tasks:
   - name: Install package
@@ -22,13 +22,8 @@
   - name: Create username for virtual ftp
     user: name={{ virtual_user }} state=present home={{ data_dir }}
 
-  - name: Install db_load tools for RHEL-6
-    yum: name=db4 state=present
-    when: ansible_distribution_major_version == "6" 
-
-  - name: Install db_load tools for RHEL-7
+    - name: Install db_load tools for RHEL-7
     yum: name=libdb-utils state=present
-    when: ansible_distribution_major_version == "7" 
 
   - name: copy the file of virtual users to FTP Server
     copy: src=files/vu_list.txt dest=/etc/vsftpd/vu_list.txt mode=0755
@@ -45,10 +40,6 @@
     template: src=files/pam_vsftpd.j2 dest=/etc/pam.d/vsftpd.vu backup=yes
     notify: restart vsftpd
 
-  - name: Setting for RHEL-7
-    command: sed -i 's/#allow_writealbe_chroot=YES/allow_writealbe_chroot=YES/' /etc/vsftpd/vsftpd.conf
-    when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" 
-   
   - name: Create the directory for virtual FTP
     file: dest={{ item }} state=directory mode=0755
     with_items:
