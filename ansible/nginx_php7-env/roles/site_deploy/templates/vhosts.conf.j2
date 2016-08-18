@@ -1,0 +1,22 @@
+server {
+    server_name {{ domain }} www.{{ domain}};
+
+    access_log /data/www/{{ domain }}/logs/access.log;
+    error_log /data/www/{{ domain }}/logs/error.log;
+
+    root /data/www/{{ domain }}/public/;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args; 
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:{{ php_sock }};
+        fastcgi_index index.php;
+        fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}

@@ -1,0 +1,13 @@
+---
+
+ - name: Create directory
+   file: path=/data/www/{{ domain }}/{{ item }} state=directory owner={{ owner }} group={{ owner }}
+   with_items:
+     - logs
+     - public
+     - tasks
+
+ - name: Write virtual host file
+   template: src=vhosts.conf.j2 dest=/etc/nginx/conf.d/{{ domain }}.conf
+   notify:
+     - restart nginx

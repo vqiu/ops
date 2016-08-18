@@ -1,0 +1,17 @@
+---
+
+ - hosts: dev
+   vars:
+     owner: www-data
+     pid: /var/run/nginx.pid
+     worker_connections: 1024
+     # 12.04[precise] 14.04[trusty] 15.10[wily] 16.04[xenial]
+     release_ver: trusty
+     php_sock: /var/run/php/php7.0-fpm.sock
+     domain: demo.vqiu.cn
+   
+   roles:
+     - php-7
+     - mariadb
+     - nginx
+     - site_deploy

@@ -1,0 +1,27 @@
+---
+
+ - name: Install require package
+   apt: name={{ item }} state=present 
+   with_items:
+     - python-pycurl
+     - software-properties-common
+
+ - name: Adding a PPA for PHP 7 Packages
+   apt_repository: repo='ppa:ondrej/php'
+
+ - name: Update cache
+   apt: update_cache=yes
+   ignore_errors: True
+
+ - name: Install php
+   apt: name={{ item }} state=present
+   with_items:
+     - php7.0-common
+     - php7.0-fpm
+     - php7.0-mysql
+     - php7.0-curl
+     - php7.0-cli
+     - php7.0-mcrypt
+     - php7.0-imap
+     - php7.0-dev
+     - php7.0-xmlrpc
