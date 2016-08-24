@@ -1,2 +1,2 @@
-deb http://nginx.org/packages/ubuntu/ {{ release_ver }} nginx
-deb-src http://nginx.org/packages/ubuntu/ {{ release_ver }} nginx
+deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx
+deb-src http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx
