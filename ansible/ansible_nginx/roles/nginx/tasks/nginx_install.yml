@@ -28,7 +28,7 @@
   with_items:
    - "{{ document_root }}"
    - "{{ access_log_dir }}"
-   - "/etc/nginx/vhost"
+   - "/etc/nginx/vhosts"
 
 - name: Make sure nginx running
   service: name=nginx state=started enabled=yes
