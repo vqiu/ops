@@ -29,6 +29,12 @@
    - "{{ document_root }}"
    - "{{ access_log_dir }}"
    - "/etc/nginx/vhosts"
+   
+- name: Copy nginx file
+  copy: src={{ item.src }} dest={{ item.dest }} backup=no
+  with_items:
+    - { src: 'proxy.conf', dest: '/etc/nginx/proxy.conf' }
+    - { src: 'gzip.conf', dest: '/etc/nginx/gzip.conf' }
 
 - name: Make sure nginx running
   service: name=nginx state=started enabled=yes
