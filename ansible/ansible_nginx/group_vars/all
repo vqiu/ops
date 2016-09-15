@@ -7,7 +7,10 @@ ntpserver_03: 1.asia.pool.ntp.org
 
 # Nginx Repo 安装包
 ngx_6_repo_url: http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
-ngx_7_repo_url: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+ngx_7_repo_url: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm\
+
+#  系统最大文件打开数
+fs_file_max: 102400
 
 # 网站域名
 server_name: www.vqiu.cn
