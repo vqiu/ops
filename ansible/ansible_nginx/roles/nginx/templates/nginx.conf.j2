@@ -1,19 +1,24 @@
-user  {{ nginx_owner }} {{ nginx_owner }};
+user  {{ nginx_owner }};
 worker_processes  {{ ansible_processor_count }};
 
 error_log  /var/log/nginx/error.log warn;
 pid        /var/run/nginx.pid;
 
+worker_rlimit_nofile {{ fs_file_max }};
 
 events {
     use epoll;
     multi_accept	on;
     accept_mutex off;
-    worker_connections  51200;
+    worker_connections  10240;
 }
 
-
 http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout  60;
+
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
@@ -22,66 +27,31 @@ http {
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
     access_log  /var/log/nginx/access.log  main;
-
-    server_names_hash_bucket_size 128;
-    client_header_buffer_size 32k;
+    error_log /var/log/nginx/error.log;
+    
+    server_names_hash_max_size 2048;
+    client_header_buffer_size 4k;
     large_client_header_buffers 4 32k;
-    client_max_body_size 8m;
-    sendfile       on;
-    tcp_nopush     on;
-    #keepalive_timeout  0;
-    keepalive_timeout  60;
+    types_hash_max_size			2048;
+    
+    client_max_body_size 20m;
 
-    # Gzip Setting
-    gzip  on;
-    gzip_static  on;
-    gzip_min_length  1k;
-    gzip_buffers     4 16k;
-    gzip_proxied expired no-cache no-store private auth;
-    gzip_http_version 1.1;
-    gzip_comp_level 4;
-    gzip_types       text/plain application/x-javascript text/css application/xml;
-    gzip_vary on;
-    gzip_disable "MSIE [1-6]\.";
-	
-	
-    # Define fastcgi configuration
-    fastcgi_intercept_errors on;
-    fastcgi_connect_timeout 300;
-    fastcgi_send_timeout 300;
-    fastcgi_read_timeout 300;
-    fastcgi_buffer_size 64k;
-    fastcgi_buffers 4 64k;
-    fastcgi_busy_buffers_size 128k;
-    fastcgi_temp_file_write_size 128k;
-
-    # Index
-    index index.php index.html;
-	
     # Hidden Version
     server_tokens off;
 	
-#    upstream backend {
-#        ip_hash;
-#        server 115.29.196.144 max_fails=3 fail_timeout=10s;
-#        server 115.29.207.111 max_fails=3 fail_timeout=10s;	
-#	}
-
-	#Forward Proxy
-#	server	{
-#		resolver 223.5.5.5 223.6.6.6 valid=20s;
-#		resolver_timeout 30s;
-#		listen 3128;
-#		location /
-#		{
-#			proxy_pass http://$http_host$request_uri;
-#
-#		}
-#	}
-
+	server {
+		listen      80;
+		server_name _;
+ 
+		keepalive_timeout  0;
+		add_header  X-Powered-By $hostname;
+ 
+		location / {
+			return 444;
+		}
+    }
 
     include /etc/nginx/vhost/*.conf;
-
 }
 
 
