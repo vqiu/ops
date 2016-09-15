@@ -4,6 +4,6 @@
   template: src={{ item.src }} dest=/etc/nginx/{{item.dest}}.conf
   with_items:
    - { src: 'nginx.conf.j2', dest: 'nginx' } 
-   - { src: 'template.conf.j2', dest: 'vhost/{{ server_name }}' } 
+   - { src: 'template.conf.j2', dest: 'vhosts/{{ server_name }}' } 
   notify: restart nginx
   when: not ssl_on
