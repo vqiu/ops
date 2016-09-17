@@ -1,19 +1,20 @@
+proxy_cache_path /data/cache keys_zone=CACHE:100m levels=1:2 inactive=12h max_size=1g;
+
 upstream backend {
 	ip_hash;
 	server 1.1.1.1 max_fails=3 fail_timeout=30s weight=5;
 	server 2.2.2.2 max_fails=3 fail_timeout=30s weight=5;
 }
 
-
 server {
-    listen 80 default_server;
-    server_name {{ server_name }};
-    root  {{ document_root }};
+	listen 80 sndbuf=1m rcvbuf=1m;
+	server_name {{ server_name }};
+	root  {{ document_root }};
 
-	# Proxy setting
 #	location / {
 #		proxy_pass http://backend;
 #		include proxy.conf
+#		proxy_cache CACHE;
 #	}
 
     location ~ .*\.php(\/.*)*$ {
@@ -21,7 +22,7 @@ server {
         #fastcgi_pass unix:/tmp/php-cgi.sock;
         fastcgi_index index.php;
         fastcgi_param   SCRIPT_FILENAME
-                        $document_root$fastcgi_script_name;
+        $document_root$fastcgi_script_name;
         include  fastcgi_params;
     }
 
@@ -32,11 +33,11 @@ server {
 	error_page 404 = http://{{ server_name }};
 
 	location ~ .*\.(gif|jpg|jpeg|png)$ {
-                expires      30d;
+		expires      30d;
     }
 
 	location ~ .*\.(js|css)?$ {
-                expires      12h;
+		expires      12h;
     }
 
 	location ~.*\.*(ico|icon) {
