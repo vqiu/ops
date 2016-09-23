@@ -2,11 +2,9 @@
 
 # 自动化入口文件
 
-
-- hosts: server
+- hosts: web-server
   remote_user: root
 
   roles:
    - common
    - nginx
-

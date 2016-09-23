@@ -7,20 +7,12 @@
     - ntp
     - libselinux-python
 
-- name: Ensure selinux turn off
-  shell: setenforce 0
-  ignore_errors: True
-  
 - name: Kernel optimize
   script: kernel_optimize.sh
   ignore_errors: True
 
-- name: Open TCP_Fast
-  sysctl: name="net.ipv4.tcp_fastopen" value=1 sysctl_set=yes state=present reload=yes
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-
 - name: Configure ntp file
-  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  copy: src=ntp.conf dest=/etc/ntp.conf
   notify: restart ntp
 
 - name: Start the ntp service

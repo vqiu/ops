@@ -1,0 +1,2 @@
+[web-server]
+192.168.3.19 ansible_ssh_pass=12345678

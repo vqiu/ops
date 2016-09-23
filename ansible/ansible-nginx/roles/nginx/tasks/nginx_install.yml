@@ -1,12 +1,5 @@
 ---
 
-- name: Download Nginx repo for RHEL-6
-  get_url: url={{ ngx_6_repo_url }} dest=/tmp/nginx-repo.rpm
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
-
-- name: Install nginx repo for RHEL-6
-  yum: name=/tmp/nginx-repo.rpm state=present
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
 
 - name: Download Nginx repo for RHEL-7
   get_url: url={{ ngx_7_repo_url }} dest=/tmp/nginx-repo.rpm

@@ -1,34 +1,27 @@
 #proxy_cache_path /data/cache keys_zone=CACHE:100m levels=1:2 inactive=12h max_size=1g;
 
-upstream backend {
-	ip_hash;
-	server 1.1.1.1 max_fails=3 fail_timeout=30s weight=5;
-	server 2.2.2.2 max_fails=3 fail_timeout=30s weight=5;
+upstream fpm-handler {
+   server {{ php_fpm_addr }}:{{ php_fpm_port}} max_fails=5 fail_timeout=30s weight=5;
 }
 
 server {
-	listen 80 sndbuf=1m rcvbuf=1m;
+	listen 80 sndbuf=8m rcvbuf=8m;
 	server_name {{ server_name }};
 	root  {{ document_root }};
-
-#	location / {
-#		proxy_pass http://backend;
-#		include proxy.conf
-#		proxy_cache CACHE;
-#	}
-
-    location ~ .*\.php(\/.*)*$ {
-        fastcgi_pass 127.0.0.1:9000;
-        #fastcgi_pass unix:/tmp/php-cgi.sock;
-        fastcgi_index index.php;
-        fastcgi_param   SCRIPT_FILENAME
-        $document_root$fastcgi_script_name;
-        include  fastcgi_params;
-    }
+	index index.php index.html;
 
 	location / {
-		index index.html index.php;
+		try_files $uri $uri/ /index.php?$args;
 	}
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass fpm-handler;
+        #fastcgi_pass unix:/tmp/php-cgi.sock;
+        fastcgi_index index.php;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include  fastcgi_params;
+    }
 	
 	error_page 404 = http://{{ server_name }};
 
@@ -46,5 +39,6 @@ server {
 	}
 
     access_log  {{ access_log_dir }}/access_{{ server_name }}.log;
+    error_log  {{ access_log_dir }}/error_{{ server_name }}.log;
     #access_log off;
 }
