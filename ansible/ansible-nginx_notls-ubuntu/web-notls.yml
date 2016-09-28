@@ -1,0 +1,46 @@
+---
+
+- name: Configure webserver with nginx for ubuntu
+  hosts: all
+
+  vars:
+    owner: www-data
+    server_name: demo.vqiu.cn
+    worker_connections: 1024
+    listen_port: 80
+
+  tasks:
+    - name: Add key
+      apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+    
+    - name: Add apt source
+      template: src=nginx.list dest=/etc/apt/sources.list.d/nginx.list
+    
+    - name: Update cache
+      shell: apt update
+      ignore_errors: True
+    
+    - name: Install nginx
+      apt: name=nginx state=present
+
+    - name: Create document root
+      file: path=/site/{{ server_name }}/{{ item }} state=directory owner={{ owner }} group={{ owner }}
+      with_items:
+        - logs
+        - public
+        - tasks
+
+    - name: Write test html file
+      template: src=index.html.j2 dest=/site/{{ server_name }}/public/index.html
+
+    - name: Copy config ilfes
+      template: src={{ item.src }} dest={{ item.dest }} backup=no
+      with_items:
+        - { src: 'nginx.conf.j2', dest: '/etc/nginx/nginx.conf' }
+        - { src: 'default.j2', dest: '/etc/nginx/conf.d/default.conf' }
+      notify:
+        - restart nginx
+    
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted enabled=yes

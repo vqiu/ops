@@ -1,0 +1,44 @@
+---
+
+- name: Copy the nginx Repository definition
+  template: src=nginx.repo.j2 dest=/etc/yum.repos.d/nginx.repo
+
+- name: Create user for nginx
+  user: name={{ user_name }} home=/dev/null shell=/sbin/nologin
+
+- name: Create document root
+  file: dest={{ document_root }} mode=0755 owner={{ user_name }} group={{user_name }} state=directory
+  ignore_errors: True
+ 
+- name: Create directory for nginx logs
+  file: dest={{ log_dir }} mode=0755 owner={{ user_name }} group={{user_name }} state=directory
+  ignore_errors: True
+  
+- name: Install nginx
+  yum: name=nginx state=latest enablerepo=nginx
+
+- name: Copy nginx configuration for webserver
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  template: src=default.conf.j2 dest=/etc/nginx/conf.d/{{ server_hostname }}.conf
+  notify: restart nginx
+  
+- name: Start Nginx service
+  service: name=nginx state=started enabled=yes
+
+- name: ensure iptables is running
+  service: name:iptables state:started
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: insert iptables rule for nginx
+  copy: src=iptables-save dest=/etc/sysconfig/iptables
+  notify: restart iptables
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: ensure firewalld is running
+  service: name=firewalld state=started
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: insert firewall rule for nginx
+  firewalld: port={{ nginx_port }}/tcp state=enabled immediate=yes permanent=true
+  notify: restart firewalld
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"

@@ -1,0 +1,40 @@
+﻿---
+
+- name: zookeeper install @by shuhui
+  hosts: all
+  vars:
+    zk_url: http://archive.apache.org/dist/zookeeper/stable/zookeeper-3.4.8.tar.gz
+    prefix: /opt
+    datadir: /data/zookeeper/data
+  remote_user: root 
+
+  tasks: 
+  - name: Install JDK on {{ ansible_distribution }}
+    apt: pkg=openjdk-8-jdk state=present
+    when: ansible_os_family == "Ubuntu"
+ 
+  - name: Install JDK on {{ ansible_os_family }}
+    yum: pkg=java-1.8.0-jdk state=present
+    when: ansible_distribution == "CentOS"
+
+  - name: Download zookeeper tarball file
+    get_url: url={{ zk_url }} dest=/opt/zookeeper-3.4.8.tar.gz
+   
+  - name: Unpack the tarball file
+    shell: "tar axvf /opt/zookeeper-3.4.8.tar.gz -C {{ prefix }} && ln -sv /opt/zookeeper-3.4.8/ /opt/zookeeper"
+    ignore_errors: True
+
+  - name: Create datadir
+    file: path={{ datadir }} state=directory
+ 
+  - name: Write configure file
+    template: src={{ item.src }} dest={{ item.dest }}
+    with_items:
+      - { src: 'templates/zoo.cfg.j2', dest: '/opt/zookeeper/conf/zoo.cfg' }
+      - { src: 'templates/zk.service.j2', dest: '/lib/systemd/system/zk.service' }
+    notify:
+      - restart zk
+
+  handlers:
+    - name: restart zk
+      service: name=zk state=restarted enable=yes    

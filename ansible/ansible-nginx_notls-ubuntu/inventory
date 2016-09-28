@@ -1,0 +1,2 @@
+[webserver]
+192.168.3.101 ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=12345678

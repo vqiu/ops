@@ -18,7 +18,7 @@ PREFIX=/usr/local                                  # 安装路径
 DOCUMENT_ROOT=/data/www                            # 网站存放目录
 CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # 编译并行数量
 
-HTTPD_VER=2.4.20                                   # apache 版本
+HTTPD_VER=2.4.23                                   # apache 版本
 APR_VER=1.5.2                                      # apr 版本
 APRUTIL_VER=1.5.4                                  # apr-utils 版本
 
@@ -54,9 +54,9 @@ function pkg_depend() {
 
 # 下载安装包
 function tarball_down() {
-	wget -c https://down.vqiu.cn/package/tarball/apache2/apr-${APR_VER}.tar.bz2
-	wget -c https://down.vqiu.cn/package/tarball/apache2/apr-util-${APRUTIL_VER}.tar.bz2
-	wget -c https://down.vqiu.cn/package/tarball/apache2/httpd-${HTTPD_VER}.tar.bz2
+	wget -c http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-${APR_VER}.tar.bz2
+	wget -c http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-util-${APRUTIL_VER}.tar.bz2
+	wget -c http://mirrors.sohu.com/apache/httpd-${HTTPD_VER}.tar.bz2
 }
 
 # 安装 apr 

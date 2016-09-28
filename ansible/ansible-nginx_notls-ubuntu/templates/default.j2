@@ -1,0 +1,16 @@
+server {
+    listen {{ listen_port }};
+    server_name {{ server_name }};
+
+    root /site/{{ server_name }}/public/;
+    index index.html index.htm index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args; 
+    }
+
+    access_log /site/{{ server_name }}/logs/access.log;
+    error_log /site/{{ server_name }}/logs/error.log;
+
+}
+
