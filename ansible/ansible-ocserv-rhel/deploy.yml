@@ -1,0 +1,47 @@
+
+
+ - hosts: vpn_server
+   remote_user: root
+
+   vars:
+     - auth_file: /etc/ocserv/ocpasswd
+     - port: 4433
+     - client_max: 1024
+     - cert_file: /etc/pki/ocserv/public/server.crt
+     - key_file: /etc/pki/ocserv/private/server.key
+     - device_name: vpns
+     - default_domain: vpn.vqiu.cn
+     - ipv4_network: 172.15.0.0
+     - ipv4_netmask: 255.255.255.0
+     - username: admin
+     - password: vqiu#123456
+     - public_int: eno16780032
+     
+   
+   tasks:
+     - name: Install ocserv package
+       yum: name=ocserv state=latest enablerepo=epel
+
+     - name: Generate private key 
+       script: scripts/generate_keys.sh
+
+     - name: Write the config file
+       template: src=ocserv.conf.j2 dest=/etc/ocserv/ocserv.conf backup=yes
+       notify: restart ocserv
+
+     - name: Make sure system forward on
+       sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
+
+     - name: Create auth file
+       shell: echo "{{ password }}" | ocpasswd -c /etc/ocserv/ocpasswd {{ username }}
+       notify: restart ocserv
+
+     - name: Generate the rule of iptables
+       template: src=ip_fw.sh.j2 dest=/tmp/ip_fw.sh
+
+     - name: Run the rule of iptables
+       shell: /bin/bash /tmp/ip_fw.sh
+
+   handlers:
+     - name: restart ocserv
+       service: name=ocserv state=restarted enabled=yes

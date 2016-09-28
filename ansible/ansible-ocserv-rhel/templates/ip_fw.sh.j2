@@ -1,0 +1,16 @@
+#!/bin/bash
+
+### Define Variables
+
+PORT={{ port }}
+VIR_NET={{ ipv4_network }}/24
+VIR_INT={{ device_name }}
+PUB_INT={{ public_int }}
+
+iptables -I INPUT -i ${PUB_INT} -m state --state NEW -p tcp --dport ${PORT} -j ACCEPT
+iptables -I INPUT -i ${PUB_INT} -m state --state NEW -p udp --dport ${PORT} -j ACCEPT
+iptables -I INPUT -i ${VIR_INT}+ -j ACCEPT
+iptables -I FORWARD -i ${VIR_INT}+ -j ACCEPT
+iptables -I FORWARD -i ${VIR_INT}+ -o ${PUB_INT} -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -I FORWARD -i ${PUB_INT} -o ${VIR_INT}+ -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -t nat -I POSTROUTING -s ${VIR_NET} -o ${PUB_INT} -j MASQUERADE
