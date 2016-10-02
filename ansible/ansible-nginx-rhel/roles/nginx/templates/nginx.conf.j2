@@ -39,16 +39,16 @@ http {
     # Hidden Version
     server_tokens off;
 	
-	server {
-		listen 80;
-		server_name _;
- 
-		keepalive_timeout  0;
-		add_header  X-Powered-By $hostname;
- 
-		location / {
-			return 444;
-		}
+    server {
+        listen 80;
+        server_name _;
+    
+        keepalive_timeout  0;
+        add_header  X-Powered-By $hostname;
+    
+        location / {
+            return 444;
+        }
     }
 
     include /etc/nginx/vhosts/*.conf;
