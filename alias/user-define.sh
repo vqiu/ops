@@ -23,10 +23,10 @@ alias curlb='curl -s -o /dev/null -w \
 "'$(date +%y-%m-%dT%T+08:00)' %{http_code} %{time_namelookup} %{time_connect} %{time_appconnect} %{time_pretransfer} %{time_redirect} %{time_starttransfer} %{size_request} %{size_download} %{speed_download} %{time_total}\n"'
 
 # 网络连接最大数
-alias conn_max="netstat -na|awk '\$5 ~ /[0-9]+:[0-9]+/ {print \$5}' |awk -F ':' -- '{print \$1}' |sort -n|uniq -c |sort -rn|tail -n 15"
+alias connMax="netstat -na|awk '\$5 ~ /[0-9]+:[0-9]+/ {print \$5}' |awk -F ':' -- '{print \$1}' |sort -n|uniq -c |sort -rn|tail -n 15"
 
 # TCP连接状态数据
-alias conn_ts="netstat -an | awk '/^tcp/ {++S[\$NF]} END {for(a in S) print a, S[a]}'"
+alias connTs="netstat -an | awk '/^tcp/ {++S[\$NF]} END {for(a in S) print a, S[a]}'"
 
 mcd() { mkdir -p "\$1"; cd "\$1";}
 alias ..="cd .."
