@@ -26,7 +26,7 @@ alias curlb='curl -s -o /dev/null -w \
 alias conn_max="netstat -na|awk '\$5 ~ /[0-9]+:[0-9]+/ {print \$5}' |awk -F ':' -- '{print \$1}' |sort -n|uniq -c |sort -rn|tail -n 15"
 
 # TCP连接状态数据
-alias conn_ts="netstat -n | awk '/^tcp/ {++S[\$NF]} END {for(a in S) print a, S[a]}'"
+alias conn_ts="netstat -an | awk '/^tcp/ {++S[\$NF]} END {for(a in S) print a, S[a]}'"
 
 mcd() { mkdir -p "\$1"; cd "\$1";}
 alias ..="cd .."
