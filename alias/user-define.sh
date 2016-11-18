@@ -28,7 +28,7 @@ alias connMax="netstat -na|awk '\$5 ~ /[0-9]+:[0-9]+/ {print \$5}' |awk -F ':' -
 # TCP连接状态数据
 alias connTs="netstat -an | awk '/^tcp/ {++S[\$NF]} END {for(a in S) print a, S[a]}'"
 
-mcd() { mkdir -p "\$1"; cd "\$1";}
+mcd() { mkdir -p "$1"; cd "$1";}
 alias ..="cd .."
 alias ...="cd ../../"
 alias listen="lsof -P -i -n"
