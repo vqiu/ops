@@ -13,8 +13,8 @@
 ### 变量定义区域 开始 ###
 
 PREFIX=/usr/local                                  # 安装路径
-PHP_VER=7.0.6                                      # PHP 版本号
-CPU_NUM=$(grep -c processor /proc/cpuinfo)         # CPU 核心数量[编译并行数量]
+PHP_VER=7.1.0                                      # PHP 版本号
+CPU_NUM=$(nproc --all)                             # CPU 核心数量[编译并行数量]
 APXS2=/usr/local/apache24/bin/apxs                 # Apache apxs 程序路径[务必存在]
 
 ### 变量定义区域 结束 ###
@@ -29,7 +29,7 @@ function apxs_exist() {
 
 # 安装php-7
 function php7_install() {
-	[[ -e php-${PHP_VER}.tar.bz2 ]] || wget -c https://down.vqiu.cn/package/tarball/php/php-${PHP_VER}.tar.bz2
+	[[ -e php-${PHP_VER}.tar.bz2 ]] || wget -c http://mirrors.sohu.com/php/php-${PHP_VER}.tar.bz2
 	tar axvf php-${PHP_VER}.tar.bz2
 	cd php-${PHP_VER}
 	./configure \
