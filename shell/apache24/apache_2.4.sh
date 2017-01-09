@@ -1,14 +1,13 @@
 #!/bin/bash
 # 文件名: apache_2.4.sh
 # 作者: shuhui
-# 版本: v1.2
+# 版本: v1.3
 
 ### 更新日志 ###
 # 2015-11-24 版本 v1.0: 1.以apache 2.4.17 版本实现简单的功能
 # 2016-01-04 版本 v1.1: 1.锁定 $OWNER 变量的 GID UID
 # 2016-04-12 版本 v1.2: 1.更新 Apache 版本为 2.4.20
-
-
+# 2017-01-09 版本 v1.3: 1.更新 Apache 版本为 2.4.25
 ### 变量定义区域 开始 ###
 
 OWNER=www                                          # 运行用户
@@ -18,7 +17,7 @@ PREFIX=/usr/local                                  # 安装路径
 DOCUMENT_ROOT=/data/www                            # 网站存放目录
 CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # 编译并行数量
 
-HTTPD_VER=2.4.23                                   # apache 版本
+HTTPD_VER=2.4.25                                   # apache 版本
 APR_VER=1.5.2                                      # apr 版本
 APRUTIL_VER=1.5.4                                  # apr-utils 版本
 
@@ -54,8 +53,8 @@ function pkg_depend() {
 
 # 下载安装包
 function tarball_down() {
-	wget -c http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-${APR_VER}.tar.bz2
-	wget -c http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-util-${APRUTIL_VER}.tar.bz2
+	wget -c http://mirrors.tuna.tsinghua.edu.cn/apache/apr/apr-${APR_VER}.tar.bz2
+	wget -c http://mirrors.tuna.tsinghua.edu.cn/apache/apr/apr-util-${APRUTIL_VER}.tar.bz2
 	wget -c http://mirrors.sohu.com/apache/httpd-${HTTPD_VER}.tar.bz2
 }
 
