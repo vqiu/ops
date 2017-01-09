@@ -7,7 +7,7 @@
 # 2015-11-24 版本 v1.0: 1.以apache 2.4.17 版本实现简单的功能
 # 2016-01-04 版本 v1.1: 1.锁定 $OWNER 变量的 GID UID
 # 2016-04-12 版本 v1.2: 1.更新 Apache 版本为 2.4.20
-# 2017-01-09 版本 v1.3: 1.更新 Apache 版本为 2.4.25
+# 2017-01-09 版本 v1.3: 1.更新 Apache 版本为 2.4.25 2.新增systemd控制脚本
 ### 变量定义区域 开始 ###
 
 OWNER=www                                          # 运行用户
@@ -15,7 +15,7 @@ uid=2000                                           # OWNER 用户 UID
 gid=2000                                           # OWNER 用户 GID
 PREFIX=/usr/local                                  # 安装路径
 DOCUMENT_ROOT=/data/www                            # 网站存放目录
-CPU_NUM=$(grep -c "processor" /proc/cpuinfo)       # 编译并行数量
+CPU_NUM=$(nproc --all)                             # 编译并行数量
 
 HTTPD_VER=2.4.25                                   # apache 版本
 APR_VER=1.5.2                                      # apr 版本
@@ -39,7 +39,7 @@ function user_create() {
 	if [[ $? -eq "1" ]];
 	then
 		/usr/sbin/groupadd ${OWNER} -g ${gid}
-	    /usr/sbin/useradd -g ${gid} -u ${uid} ${OWNER} -s /sbin/nologin -d ${DOCUMENT_ROOT};
+	    	/usr/sbin/useradd -g ${gid} -u ${uid} ${OWNER} -s /sbin/nologin -M;
 	fi
 }
 
@@ -86,7 +86,7 @@ function apache24_install() {
 	tar axvf httpd-${HTTPD_VER}.tar.bz2
 	cd httpd-${HTTPD_VER}
 	./configure \
-	--prefix=${PREFIX}/apache24 \
+	--prefix=${PREFIX}/apache-${HTTPD_VER} \
 	--enable-pcre \
 	--enable-so \
 	--enable-ssl \
@@ -96,18 +96,44 @@ function apache24_install() {
 	--with-apr-util=${PREFIX}/apr-util/ \
 	--with-zlib \
 	--with-mcrypt \
-	--with-mpm=${MPM}
-	make -j ${CPU_NUM}
+	--with-mpm=${MPM} || echo "Error: apache-${HTTPD_VER} configure does not pass"; exit 1
+	make -j ${CPU_NUM} || echo "Error: apache-${HTTPD_VER} compile does not pass"; exit 1
 	make install
 	cd ..
-		
-	# 添加系统环境变量
-	echo "export PATH=\$PATH:${PREFIX}/apache24/bin">/etc/profile.d/apache24.sh
-	chmod +x /etc/profile.d/apache24.sh
-	source /etc/profile.d/apache24.sh
 	
+	# 删除软链接
+	if [[ -l ${PREFIX}/apache24 ]]
+	then
+		rm -f ${PREFIX}/apache24
+	fi
+	
+	# 添加软链接
+	ln -s ${PREFIX}/apache-${HTTPD_VER} ${PREFIX}/apache24
+	
+	# 添加系统环境变量
+	echo "export PATH=\$PATH:${PREFIX}/apache24/bin">/etc/profile.d/apache.sh
+	chmod +x /etc/profile.d/apache.sh
+	source /etc/profile.d/apache.sh
+
+	cat >/lib/systemd/system/apache24.service<<EOF
+[Unit]
+Description=The Apache HTTP Server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=fork
+ExecStart=${PREFIX}/apache24/bin/httpd -t
+ExecStart=${PREFIX}/apache24/bin/httpd -DFOREGROUND
+ExecReload=${PREFIX}/apache24/bin/httpd -k graceful
+ExecStop=/bin/kill -WINCH ${MAINPID}
+KillSignal=SIGCONT
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
 	# 开机自启动
-	echo "${PREFIX}/apache24/bin/apache -k start" >>/etc/rc.local
+	systemctl enable apache24.service 
 	
 }
 
