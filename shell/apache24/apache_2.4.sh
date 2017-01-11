@@ -102,7 +102,7 @@ function apache24_install() {
 	cd ..
 	
 	# 删除软链接
-	if [[ -l ${PREFIX}/apache24 ]]
+	if [[ -L ${PREFIX}/apache24 ]]
 	then
 		rm -f ${PREFIX}/apache24
 	fi
@@ -155,8 +155,8 @@ function apache24_conf() {
 		sed -i "s;LoadModule status_module modules/mod_status.so;#LoadModule status_module modules/mod_status.so;" ${PREFIX}/apache24/conf/httpd.conf
 		sed -i "s;#LoadModule rewrite_module modules/mod_rewrite.so;LoadModule rewrite_module modules/mod_rewrite.so;" ${PREFIX}/apache24/conf/httpd.conf
 		sed -i "s;#LoadModule vhost_alias_module modules/mod_vhost_alias.so;LoadModule vhost_alias_module modules/mod_vhost_alias.so;" ${PREFIX}/apache24/conf/httpd.conf
-		sed -i "s;#LoadModule deflate_module modules/mod_deflate.so;LoadModule deflate_module modules/mod_deflate.so;" ${PREFIX}/apache24/conf/httpd.conf
-		sed -i "s;#LoadModule expires_module modules/mod_expires.so;LoadModule expires_module modules/mod_expires.so;" ${PREFIX}/apache24/conf/httpd.conf
+		#sed -i "s;#LoadModule deflate_module modules/mod_deflate.so;LoadModule deflate_module modules/mod_deflate.so;" ${PREFIX}/apache24/conf/httpd.conf
+		#sed -i "s;#LoadModule expires_module modules/mod_expires.so;LoadModule expires_module modules/mod_expires.so;" ${PREFIX}/apache24/conf/httpd.conf
 }
 
 user_create
