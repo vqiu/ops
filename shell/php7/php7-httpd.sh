@@ -66,8 +66,9 @@ function php7_install() {
 	--enable-opcache \
 	--with-gettext \
 	--enable-exif \
-	--disable-fileinfo
-	make -j${CPU_NUM} && make install
+	--disable-fileinfo && \
+	make -j${CPU_NUM} && \
+	make install
 
     if [[ $? -eq 0 ]]; then
     
