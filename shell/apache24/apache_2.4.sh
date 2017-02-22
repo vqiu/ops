@@ -141,22 +141,22 @@ EOF
 function apache24_conf() {
 		
 
-		# 备份主文件
-		cp ${PREFIX}/apache24/conf/httpd.conf ${PREFIX}/apache24/conf/httpd.conf.default
-		
-		# 使用 Hostname 变量做为 ServerName
-		sed -i "s/#ServerName www.example.com:80/ServerName ${HOSTNAME}:80/" ${PREFIX}/apache24/conf/httpd.conf
-		
-		# 更改运行用户
-		sed -i "s/User daemon/User ${OWNER}/" ${PREFIX}/apache24/conf/httpd.conf
-		sed -i "s/Group daemon/Group ${OWNER}/" ${PREFIX}/apache24/conf/httpd.conf
-		
-		# 启禁模块
-		sed -i "s;LoadModule status_module modules/mod_status.so;#LoadModule status_module modules/mod_status.so;" ${PREFIX}/apache24/conf/httpd.conf
-		sed -i "s;#LoadModule rewrite_module modules/mod_rewrite.so;LoadModule rewrite_module modules/mod_rewrite.so;" ${PREFIX}/apache24/conf/httpd.conf
-		sed -i "s;#LoadModule vhost_alias_module modules/mod_vhost_alias.so;LoadModule vhost_alias_module modules/mod_vhost_alias.so;" ${PREFIX}/apache24/conf/httpd.conf
-		#sed -i "s;#LoadModule deflate_module modules/mod_deflate.so;LoadModule deflate_module modules/mod_deflate.so;" ${PREFIX}/apache24/conf/httpd.conf
-		#sed -i "s;#LoadModule expires_module modules/mod_expires.so;LoadModule expires_module modules/mod_expires.so;" ${PREFIX}/apache24/conf/httpd.conf
+	# 备份主文件
+	cp ${PREFIX}/apache24/conf/httpd.conf ${PREFIX}/apache24/conf/httpd.conf.default
+	
+	# 使用 Hostname 变量做为 ServerName
+	sed -i "s/#ServerName www.example.com:80/ServerName ${HOSTNAME}:80/" ${PREFIX}/apache24/conf/httpd.conf
+	
+	# 更改运行用户
+	sed -i "s/User daemon/User ${OWNER}/" ${PREFIX}/apache24/conf/httpd.conf
+	sed -i "s/Group daemon/Group ${OWNER}/" ${PREFIX}/apache24/conf/httpd.conf
+	
+	# 启禁模块
+	sed -i "s;LoadModule status_module modules/mod_status.so;#LoadModule status_module modules/mod_status.so;" ${PREFIX}/apache24/conf/httpd.conf
+	sed -i "s;#LoadModule rewrite_module modules/mod_rewrite.so;LoadModule rewrite_module modules/mod_rewrite.so;" ${PREFIX}/apache24/conf/httpd.conf
+	sed -i "s;#LoadModule vhost_alias_module modules/mod_vhost_alias.so;LoadModule vhost_alias_module modules/mod_vhost_alias.so;" ${PREFIX}/apache24/conf/httpd.conf
+	#sed -i "s;#LoadModule deflate_module modules/mod_deflate.so;LoadModule deflate_module modules/mod_deflate.so;" ${PREFIX}/apache24/conf/httpd.conf
+	#sed -i "s;#LoadModule expires_module modules/mod_expires.so;LoadModule expires_module modules/mod_expires.so;" ${PREFIX}/apache24/conf/httpd.conf
 }
 
 user_create
