@@ -96,8 +96,8 @@ function apache24_install() {
 	--with-apr-util=${PREFIX}/apr-util/ \
 	--with-zlib \
 	--with-mcrypt \
-	--with-mpm=${MPM} || echo "Error: apache-${HTTPD_VER} configure does not pass"; exit 1
-	make -j ${CPU_NUM} || echo "Error: apache-${HTTPD_VER} compile does not pass"; exit 1
+	--with-mpm=${MPM} &&
+	make -j ${CPU_NUM} &&
 	make install
 	cd ..
 	
