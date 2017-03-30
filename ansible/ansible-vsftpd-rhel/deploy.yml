@@ -22,7 +22,7 @@
   - name: Create username for virtual ftp
     user: name={{ virtual_user }} state=present home={{ data_dir }}
 
-    - name: Install db_load tools for RHEL-7
+  - name: Install db_load tools for RHEL-7
     yum: name=libdb-utils state=present
 
   - name: copy the file of virtual users to FTP Server
