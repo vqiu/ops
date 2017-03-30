@@ -18,7 +18,10 @@
   - name: Turn off selinux
     command: setenforce 0
     ignore_errors: True
-
+    
+  - name: Make sure {{ data_dir }} exist
+    file: path={{ data_dir }} state=directory
+    
   - name: Create username for virtual ftp
     user: name={{ virtual_user }} state=present home={{ data_dir }}
 
