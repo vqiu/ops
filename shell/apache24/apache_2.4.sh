@@ -45,7 +45,7 @@ function user_create() {
 
 # 安装依赖包
 function pkg_depend() {
-	for pkg in bzip2-devel gcc wget pcre-devel autoconf automake pcre-devel openssl-devel ncurses-devel libxml2-devel bison zlib-devel libtool-ltdl-devel libtool flex;
+	for pkg in bzip2 bzip2-devel gcc wget pcre-devel autoconf automake pcre-devel openssl-devel ncurses-devel libxml2-devel bison zlib-devel libtool-ltdl-devel libtool flex;
 	do
 		yum -y install ${pkg};
 	done
