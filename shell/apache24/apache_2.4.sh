@@ -1,6 +1,6 @@
 #!/bin/bash
 # 文件名: apache_2.4.sh
-# 作者: shuhui
+# 作者: ©树辉
 # 版本: v1.3
 
 ### 更新日志 ###
@@ -8,6 +8,7 @@
 # 2016-01-04 版本 v1.1: 1.锁定 $OWNER 变量的 GID UID
 # 2016-04-12 版本 v1.2: 1.更新 Apache 版本为 2.4.20
 # 2017-01-09 版本 v1.3: 1.更新 Apache 版本为 2.4.25 2.新增systemd控制脚本
+
 ### 变量定义区域 开始 ###
 
 OWNER=www                                          # 运行用户
@@ -45,7 +46,7 @@ function user_create() {
 
 # 安装依赖包
 function pkg_depend() {
-	for pkg in bzip2 bzip2-devel gcc wget pcre-devel autoconf automake pcre-devel openssl-devel ncurses-devel libxml2-devel bison zlib-devel libtool-ltdl-devel libtool flex;
+	for pkg in bzip2 ca-certificates bzip2-devel gcc wget pcre-devel autoconf automake pcre-devel openssl-devel ncurses-devel libxml2-devel bison zlib-devel libtool-ltdl-devel libtool flex;
 	do
 		yum -y install ${pkg};
 	done
