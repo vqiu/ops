@@ -123,7 +123,7 @@ After=network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=fork
-ExecStart=${PREFIX}/apache24/bin/httpd -t
+ExecStartPre=${PREFIX}/apache24/bin/httpd -t
 ExecStart=${PREFIX}/apache24/bin/httpd -DFOREGROUND
 ExecReload=${PREFIX}/apache24/bin/httpd -k graceful
 ExecStop=/bin/kill -WINCH ${MAINPID}
